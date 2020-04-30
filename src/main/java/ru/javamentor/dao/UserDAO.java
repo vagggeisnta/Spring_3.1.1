@@ -14,7 +14,9 @@ public interface UserDAO {
 
     void deleteUser(Long id);
 
-    void editUser(Long id, User user);
+    void setUsername(Long id, String username);
+
+    void setPassword(Long id, String username);
 
     User loadUserByUsername(String username);
 }
