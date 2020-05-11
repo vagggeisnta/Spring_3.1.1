@@ -2,6 +2,7 @@ package ru.javamentor.dao;
 
 
 
+import ru.javamentor.model.Role;
 import ru.javamentor.model.User;
 
 import java.util.List;
@@ -14,9 +15,7 @@ public interface UserDAO {
 
     void deleteUser(Long id);
 
-    void setUsername(Long id, String username);
-
-    void setPassword(Long id, String username);
+   void updateUser(User user);
 
     User loadUserByUsername(String username);
 }

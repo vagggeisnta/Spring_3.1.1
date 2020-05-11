@@ -17,7 +17,7 @@ public class UserController {
     UserService userService;
 
     @GetMapping
-    public String userInfo(Authentication authentication, ModelMap modelMap){
+    public String userInfo(Authentication authentication, ModelMap modelMap) {
         modelMap.addAttribute("user", authentication.getPrincipal());
         return "User";
     }

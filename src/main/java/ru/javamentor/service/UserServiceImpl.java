@@ -6,8 +6,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javamentor.dao.UserDAO;
+import ru.javamentor.model.Role;
 import ru.javamentor.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -31,22 +33,21 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void deleteUser(Long id){
+    public void deleteUser(Long id) {
         userDAO.deleteUser(id);
     }
 
     @Transactional
     @Override
-    public void editUser(Long id, User user){
-        userDAO.setUsername(id, user.getUsername());
-        userDAO.setPassword(id, user.getPassword());
+    public void updateUser(User user) {
+        userDAO.updateUser(user);
     }
 
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userDAO.loadUserByUsername(s);
-        if (user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("user is not found");
         }
         return user;

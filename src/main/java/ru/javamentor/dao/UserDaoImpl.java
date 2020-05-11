@@ -1,6 +1,7 @@
 package ru.javamentor.dao;
 
 import org.springframework.stereotype.Repository;
+import ru.javamentor.model.Role;
 import ru.javamentor.model.User;
 
 
@@ -30,15 +31,9 @@ public class UserDaoImpl implements UserDAO {
     }
 
     @Override
-    public void setUsername(Long id, String username){
-        entityManager.createQuery("UPDATE User u set u.username = :username WHERE u.id = :id")
-                     .setParameter("username", username).setParameter("id", id).executeUpdate();
-    }
+    public void updateUser(User user){
+        entityManager.merge(user);
 
-    @Override
-    public void setPassword(Long id, String password){
-        entityManager.createQuery("UPDATE User u set u.password = :password WHERE u.id = :id")
-                     .setParameter("password", password).setParameter("id", id).executeUpdate();
     }
 
     @Override
