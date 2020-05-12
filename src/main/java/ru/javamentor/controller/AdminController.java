@@ -1,6 +1,8 @@
 package ru.javamentor.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -37,10 +39,10 @@ public class AdminController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String printUsers(ModelMap modelMap, HttpServletRequest httpServletRequest) {
+    public String printUsers(ModelMap modelMap, Authentication authentication) {
         List<User> users = userService.listOfUsers();
         List<Role> roles = roleService.listOfRoles();
-        User user = (User) httpServletRequest.getSession().getAttribute("user");
+        User user = (User) authentication.getPrincipal();
         modelMap.addAttribute("users", users);
         modelMap.addAttribute("user", user);
         modelMap.addAttribute("roles", roles);
