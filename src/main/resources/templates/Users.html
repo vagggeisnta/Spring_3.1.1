@@ -28,7 +28,7 @@
     <div class="row vh-100">
         <div class="col-2">
             <div class="nav flex-column nav-pills" id="adminUser-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" data-toggle="pill" href="#admin" role="tab"
+                <a class="nav-link active mt-3" data-toggle="pill" href="#admin" role="tab"
                    aria-controls="#admin" aria-selected="true">Admin</a>
                 <a class="nav-link" data-toggle="pill" href="#user" role="tab"
                    aria-controls="user" aria-selected="false">User</a>
@@ -37,95 +37,125 @@
         <div class="col-10 bg-light px-4">
             <div class="tab-content" id="adminUserContent">
                 <div class="tab-pane fade show active" id="admin" role="tabpanel" aria-labelledby="admin">
-
-
-                </div>
-                <h1>Admin panel</h1>
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#users" role="tab">User table</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#newuser" role="tab">New User</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active show" id="users" role="tabpanel">
-                        <div class="card">
-                            <div class="card-header">
-                                <strong>All users</strong>
+                    <h1>Admin panel</h1>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#users" role="tab">Users table</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#newuser" role="tab">New User</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active show" id="users" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <strong>All users</strong>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col"><strong>ID</strong></th>
+                                            <th scope="col"><strong>Username</strong></th>
+                                            <th scope="col"><strong>Password</strong></th>
+                                            <th scope="col"><strong>Role</strong></th>
+                                            <th scope="col"><strong>Edit</strong></th>
+                                            <th scope="col"><strong>Delete</strong></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="user : ${users}">
+                                            <th th:text="${user.id}" scope="row"/>
+                                            <td th:text="${user.username}"/>
+                                            <td th:text="${user.password}"/>
+                                            <td>
+                                                <th:block th:each="roles1 : ${user.getRoles()}">
+                                                    <span th:text="${#strings.replace(roles1.name, 'ROLE_', '')}"/>
+                                                </th:block>
+                                            </td>
+                                            <td>
+                                                <form action="/admin/edit" method="get">
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                            th:data-target="'#edit' + ${user.id}">
+                                                        Edit
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="/admin/delete" method="post">
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                            th:data-target="'#delete' + ${user.id}">
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col"><strong>ID</strong></th>
-                                        <th scope="col"><strong>Username</strong></th>
-                                        <th scope="col"><strong>Password</strong></th>
-                                        <th scope="col"><strong>Role</strong></th>
-                                        <th scope="col"><strong>Edit</strong></th>
-                                        <th scope="col"><strong>Delete</strong></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="user : ${users}">
-                                        <th th:text="${user.id}" scope="row"/>
-                                        <td th:text="${user.username}"/>
-                                        <td th:text="${user.password}"/>
-                                        <td>
-                                            <th:block th:each="roles1 : ${user.getRoles()}">
-                                                <span th:text="${#strings.replace(roles1.name, 'ROLE_', '')}"/>
-                                            </th:block>
-                                        </td>
-                                        <td>
-                                            <form action="/admin/edit" method="get">
-                                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                        th:data-target="'#edit' + ${user.id}">
-                                                    Edit
-                                                </button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form action="/admin/delete" method="post">
-                                                <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                        th:data-target="'#delete' + ${user.id}">
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                        </div>
+                        <div class="tab-pane" id="newuser" role="tabpanel">
+                            <div class="card">
+                                <div class="card-header">
+                                    <strong>Add new user</strong>
+                                </div>
+                                <div class="card-body">
+                                    <form class="text-center m-auto w-25" action="/admin/add" method="post">
+                                        <div class="form-group">
+                                            <strong><label for="username">Username</label></strong>
+                                            <input id="username" name="username" class="form-control form-control-sm"
+                                                   type="text" placeholder="First name">
+                                        </div>
+                                        <div class="form-group">
+                                            <strong><label for="password">Password</label></strong>
+                                            <input id="password" name="password" class="form-control form-control-sm"
+                                                   type="text" placeholder="Password">
+                                        </div>
+                                        <div class="form-group">
+                                            <strong><label for="role">Role</label></strong>
+                                            <select id="role" name="roles" class="custom-select" multiple size="2">
+                                                <option value="1">ADMIN</option>
+                                                <option value="2">USER</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-success btn-save col-5">Add new user</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane" id="newuser" role="tabpanel">
-                        <div class="card">
-                            <div class="card-header">
-                                <strong>Add new user</strong>
-                            </div>
-                            <div class="card-body">
-                                <form class="text-center m-auto w-25" action="/admin/add" method="post">
-                                    <div class="form-group">
-                                        <strong><label for="username">Username</label></strong>
-                                        <input id="username" name="username" class="form-control form-control-sm"
-                                               type="text" placeholder="First name">
-                                    </div>
-                                    <div class="form-group">
-                                        <strong><label for="password">Password</label></strong>
-                                        <input id="password" name="password" class="form-control form-control-sm"
-                                               type="text" placeholder="Password">
-                                    </div>
-                                    <div class="form-group">
-                                        <strong><label for="role">Role</label></strong>
-                                        <select id="role" name="roles" class="custom-select" multiple size="2">
-                                            <option value="1">ADMIN</option>
-                                            <option value="2">USER</option>
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="btn btn-success btn-save col-5">Add new user</button>
-                                </form>
-                            </div>
+                </div>
+                <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="user">
+                    <h1>User information-page</h1>
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>About user</strong>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col"><strong>ID</strong></th>
+                                    <th scope="col"><strong>Username</strong></th>
+                                    <th scope="col"><strong>Password</strong></th>
+                                    <th scope="col"><strong>Role</strong></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th th:text="${user.id}" scope="row"/>
+                                    <td th:text="${user.username}"/>
+                                    <td th:text="${user.password}"/>
+                                    <td>
+                                        <th:block th:each="roles1 : ${user.getRoles()}">
+                                            <span th:text="${#strings.replace(roles1.name, 'ROLE_', '')}"/>
+                                        </th:block>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
