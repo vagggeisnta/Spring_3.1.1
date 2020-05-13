@@ -32,7 +32,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addUser(@ModelAttribute User user, @RequestParam List<Long> roles) {
+    public String addUser(@ModelAttribute User user, @RequestParam List<String> roles) {
         user.setRoles(roleService.getRolesById(roles));
         userService.addUser(user);
         return "redirect:/admin";
@@ -50,7 +50,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public String editUser(@ModelAttribute User user, @RequestParam(required = false) List<Long> roles, ModelMap modelMap) {
+    public String editUser(@ModelAttribute User user, @RequestParam(required = false) List<String> roles, ModelMap modelMap) {
         user.setRoles(roleService.getRolesById(roles));
         userService.updateUser(user);
         return "redirect:/admin";

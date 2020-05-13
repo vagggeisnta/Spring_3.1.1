@@ -14,12 +14,12 @@ public class RoleDAOImpl implements RoleDAO {
 
     @Override
     public List<Role> listOfRoles() {
-        return entityManager.createQuery("SELECT u.roles FROM User u").getResultList();
+        return entityManager.createQuery("FROM Role").getResultList();
     }
 
     @Override
-    public List<Role> getRolesById(List<Long> ids){
-        return entityManager.createQuery("from Role role where role.id in (:ids)").setParameter("ids", ids).getResultList();
+    public List<Role> getRolesById(List<String> ids){
+        return entityManager.createQuery("from Role role where role.name in (:ids)").setParameter("ids", ids).getResultList();
 
     }
 
