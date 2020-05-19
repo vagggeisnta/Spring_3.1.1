@@ -8,5 +8,9 @@ public interface RoleService {
 
     List<Role> listOfRoles();
 
-    List<Role> getRolesById(List<String> ids);
+    List<Role> getRolesByName(List<String> ids);
+
+
+    List<String> getRolesNames(List<Role> roles);
+
 }

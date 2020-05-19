@@ -40,4 +40,9 @@ public class UserDaoImpl implements UserDAO {
     public User loadUserByUsername(String username) {
        return (User) entityManager.createQuery("FROM User WHERE username = :id").setParameter("id", username).getSingleResult();
     }
+
+    @Override
+    public boolean isUserExist(User user){
+        return entityManager.createQuery("FROM User WHERE username = :username").setParameter("username", user.getUsername()).getResultList().size() > 0;
+    }
 }

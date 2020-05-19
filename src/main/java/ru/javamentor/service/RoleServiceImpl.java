@@ -6,6 +6,7 @@ import ru.javamentor.dao.RoleDAO;
 import ru.javamentor.model.Role;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -19,7 +20,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> getRolesById(List<String> ids) {
-        return roleDAO.getRolesById(ids);
+    public List<Role> getRolesByName(List<String> ids) {
+        return roleDAO.getRolesByName(ids);
+    }
+
+    @Override
+    public List<String> getRolesNames(List<Role> roles){
+       return roles.stream().map(Role::getName).collect(Collectors.toList());
     }
 }

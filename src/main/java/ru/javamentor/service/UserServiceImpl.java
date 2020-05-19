@@ -27,8 +27,13 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void addUser(User user) {
-        userDAO.addUser(user);
+    public boolean addUser(User user) {
+        boolean isAdded = false;
+        if (!isUserExist(user)) {
+            userDAO.addUser(user);
+            isAdded = true;
+        }
+        return isAdded;
     }
 
     @Transactional
@@ -51,5 +56,10 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("user is not found");
         }
         return user;
+    }
+
+    @Override
+    public boolean isUserExist(User user){
+        return userDAO.isUserExist(user);
     }
 }

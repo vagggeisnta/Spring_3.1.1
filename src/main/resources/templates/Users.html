@@ -11,17 +11,67 @@
             height: 100%;
         }
     </style>
+    <script
+            src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script>
+        $(function () {
+            $('#formAdd').submit(function (e) {
+                e.preventDefault();
+                let user = {};
+                let roles = [{},{}];
+                let i = 0;
+                $(this).serializeArray().map(function(x){
+                    if(x.name === 'roles'){
+                        roles[i]['name'] = x.value;
+                        i++;
+                        return;
+                    }
+                    user[x.name] = x.value;
+                });
+                user['roles'] = roles;
+                $.ajax(
+                    {
+                        contentType : 'application/json',
+                        url: 'admin/users',
+                        type: 'POST',
+                        data: JSON.stringify(user),
+                        success: function(){
+                            alert('Successful')
+                            $('#formAdd')[0].reset();
+                        },
+                        error: function (a) {
+                            console.log(a);
+                            alert('Username is busy');
+                        }
+                    });
+                });
+            });
+        $.ajax(
+            {
+                contentType : 'application/json',
+                url: 'admin/users',
+                type: 'GET',
+                success: function(users){
+                            users.forEach(function (element) {
+
+                            })
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            }
+        )
+    </script>
 </head>
 <body>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
 <div th:insert="~{laoyts :: copy}">
 </div>
 <div class="container-fluid">
@@ -100,11 +150,11 @@
                                     <strong>Add new user</strong>
                                 </div>
                                 <div class="card-body">
-                                    <form class="text-center m-auto w-25" action="/admin/add" method="post">
+                                    <form id="formAdd" class="text-center m-auto w-25" action="/admin/users" method="post">
                                         <div class="form-group">
                                             <strong><label for="username">Username</label></strong>
                                             <input id="username" name="username" class="form-control form-control-sm"
-                                                   type="text" placeholder="First name">
+                                                   type="text" placeholder="Username">
                                         </div>
                                         <div class="form-group">
                                             <strong><label for="password">Password</label></strong>
@@ -117,8 +167,9 @@
                                                 <option th:each="i : ${roles}" th:value="${i.name}"
                                                         th:text="${#strings.replace(i.name, 'ROLE_', '')}"></option>
                                             </select>
+
                                         </div>
-                                        <button type="submit" class="btn btn-success btn-save col-5">Add new user</button>
+                                        <button type="submit" id="addButton" class="btn btn-success btn-save col-5">Add new user</button>
                                     </form>
                                 </div>
                             </div>

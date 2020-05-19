@@ -18,4 +18,6 @@ public interface UserDAO {
    void updateUser(User user);
 
     User loadUserByUsername(String username);
+
+    boolean isUserExist(User user);
 }

@@ -1,24 +1,33 @@
 package ru.javamentor.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ru.javamentor.model.User;
+import ru.javamentor.service.RoleService;
 import ru.javamentor.service.UserService;
 
 
-@Controller
-@RequestMapping("/user")
+@RestController
+@RequestMapping
 public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    RoleService roleService;
 
-    @GetMapping
-    public String userInfo(Authentication authentication, ModelMap modelMap) {
-        modelMap.addAttribute("user", authentication.getPrincipal());
-        return "User";
+    @PostMapping(value = "admin/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> add(@RequestBody User user){
+        user.setRoles(roleService.getRolesByName(roleService.getRolesNames(user.getRoles())));
+        HttpStatus httpStatus = userService.addUser(user) ? HttpStatus.CREATED : HttpStatus.BAD_GATEWAY;
+        return new ResponseEntity<>(httpStatus);
     }
+
+    @GetMapping(value = "admin/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> read(){
+        return new ResponseEntity<>(userService.listOfUsers(), HttpStatus.OK);
+    }
+
 }
