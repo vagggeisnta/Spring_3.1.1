@@ -21,55 +21,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
-    <script>
-        $(function () {
-            $('#formAdd').submit(function (e) {
-                e.preventDefault();
-                let user = {};
-                let roles = [{},{}];
-                let i = 0;
-                $(this).serializeArray().map(function(x){
-                    if(x.name === 'roles'){
-                        roles[i]['name'] = x.value;
-                        i++;
-                        return;
-                    }
-                    user[x.name] = x.value;
-                });
-                user['roles'] = roles;
-                $.ajax(
-                    {
-                        contentType : 'application/json',
-                        url: 'admin/users',
-                        type: 'POST',
-                        data: JSON.stringify(user),
-                        success: function(){
-                            alert('Successful')
-                            $('#formAdd')[0].reset();
-                        },
-                        error: function (a) {
-                            console.log(a);
-                            alert('Username is busy');
-                        }
-                    });
-                });
-            });
-        $.ajax(
-            {
-                contentType : 'application/json',
-                url: 'admin/users',
-                type: 'GET',
-                success: function(users){
-                            users.forEach(function (element) {
-
-                            })
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            }
-        )
-    </script>
+    <script src="script.js"></script>
 </head>
 <body>
 <div th:insert="~{laoyts :: copy}">
@@ -112,33 +64,7 @@
                                             <th scope="col"><strong>Delete</strong></th>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        <tr th:each="user : ${users}">
-                                            <th th:text="${user.id}" scope="row"/>
-                                            <td th:text="${user.username}"/>
-                                            <td th:text="${user.password}"/>
-                                            <td>
-                                                <th:block th:each="roles1 : ${user.getRoles()}">
-                                                    <span th:text="${#strings.replace(roles1.name, 'ROLE_', '')}"/>
-                                                </th:block>
-                                            </td>
-                                            <td>
-                                                <form action="/admin/edit" method="get">
-                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                            th:data-target="'#edit' + ${user.id}">
-                                                        Edit
-                                                    </button>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form action="/admin/delete" method="post">
-                                                    <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                            th:data-target="'#delete' + ${user.id}">
-                                                        Delete
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
+                                        <tbody id="allUsers">
                                         </tbody>
                                     </table>
                                 </div>
@@ -331,5 +257,13 @@
         </form>
     </div>
 </div>
+<template id="usersList">
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    <tr>
+</template>
 </body>
 </html>
