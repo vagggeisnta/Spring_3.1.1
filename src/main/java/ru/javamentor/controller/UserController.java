@@ -3,6 +3,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.javamentor.model.User;
 import ru.javamentor.service.RoleService;
@@ -10,7 +11,6 @@ import ru.javamentor.service.UserService;
 
 
 @RestController
-@RequestMapping
 public class UserController {
 
     @Autowired
@@ -30,4 +30,14 @@ public class UserController {
         return new ResponseEntity<>(userService.listOfUsers(), HttpStatus.OK);
     }
 
+    @PutMapping(value = "admin/users/{id}")
+    public void update(@RequestBody User user){
+        user.setRoles(roleService.getRolesByName(roleService.getRolesNames(user.getRoles())));
+        userService.updateUser(user);
+    }
+
+    @DeleteMapping(value = "admin/users/{id}")
+    public void delete(@PathVariable(name = "id") long id){
+        userService.deleteUser(id);
+    }
 }
